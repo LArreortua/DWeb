@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>EnergiZen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link 
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+  >
+  <style>
+    header {
+      background: #88b42a;
+      color: #fcfcf2;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+    #carritoIcono {
+      position: absolute;
+      top: 40px;
+      right: 30px;
+      cursor: pointer;
+    }
+    #carritoIcono span {
+      background: red;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      color: #fff;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>EnergiZen</h1>
+  <p>La fuerza que te impulsa, el equilibrio que te guía</p>
+  <div id="carritoIcono" onclick="mostrarCarrito()">
+    🛒 <span id="carritoCantidad">0</span>
+  </div>
+</header>
+
+<div class="container my-3">
+  <nav class="mb-3 text-center">
+    <button class="btn btn-outline-success mx-1" onclick="filtrarProductos('somos')">¿Quienes Somos?</button>
+    <button class="btn btn-outline-success mx-1" onclick="filtrarProductos('proteinas')">Proteínas</button>
+    <button class="btn btn-outline-success mx-1" onclick="filtrarProductos('suplementos')">Suplementos</button>
+    <button class="btn btn-outline-success mx-1" onclick="filtrarProductos('ansioliticos')">Ansiolíticos</button>
+  </nav>
+
+  <div class="row" id="items"></div>
+
+  <!-- Sección Quiénes Somos -->
+  <div id="somos" style="display: none;">
+    <center><h2>¿Quiénes Somos?...</h2></center>
+    <p>EnergiZen es una empresa dedicada a la comercialización y desarrollo de suplementos alimenticios orgánicos, con un enfoque integral en la salud y el bienestar. Ofrecemos productos de alta calidad que mejoran el rendimiento físico, mental y el bienestar general, apoyando marcas mexicanas del sector.</p>
+  </div>
+
+  <!-- Carrito -->
+  <div id="carrito" style="display: none;">
+    <center><h2>Carrito de Compras</h2></center>
+    <ul id="listaCarrito" class="list-group mb-3"></ul>
+    <p><strong>Total:</strong> $<span id="total">0</span></p>
+    <button id="comprarBtn" class="btn btn-success" onclick="mostrarLogin()">Comprar</button>
+    <button class="btn btn-secondary mt-3" onclick="filtrarProductos('todos')">Volver al Catálogo</button>
+  </div>
+  
+  <!-- Login -->
+  <div id="loginForm" style="display: none;">
+    <center><h2>Iniciar sesión para completar la compra</h2></center>
+    <input type="text" id="username" placeholder="Usuario" class="form-control mb-2">
+    <input type="password" id="password" placeholder="Contraseña" class="form-control mb-2">
+    <button class="btn btn-primary" onclick="realizarCompra()">Confirmar Compra</button>
+    <p id="loginMsg" style="color: red;"></p>
+    <button class="btn btn-secondary mt-3" onclick="filtrarProductos('todos')">Volver al Catálogo</button>
+  </div>
+</div>
+
+<script>
+  const productos = [
+    { id: 1, nombre: 'Proteína Zen', precio: 380.00, categoria: 'proteinas', imagen: "EnergiZen.png"  },
+    { id: 2, nombre: 'Vitaminas B-Plus', precio: 100.00, categoria: 'suplementos', imagen: "EnergiZen.png"  },
+    { id: 3, nombre: 'Omega 3 Pure', precio: 90.00, categoria: 'suplementos', imagen: "EnergiZen.png"  },
+    { id: 4, nombre: 'CalmaZen', precio: 150.00, categoria: 'ansioliticos', imagen: "EnergiZen.png"  },
+    { id: 5, nombre: 'Proteína Herbal', precio: 456.00, categoria: 'proteinas', imagen: "EnergiZen.png"  },
+    { id: 6, nombre: 'Tranquilizante Natural', precio: 78.00, categoria: 'ansioliticos', imagen: "EnergiZen.png"  }
+  ];
+
+  let carrito = [];
+  const usuarios = { cliente: '1234' };
+
+  const ocultarTodo = () => {
+    document.getElementById('items').style.display = 'none';
+    document.getElementById('somos').style.display = 'none';
+    document.getElementById('carrito').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'none';
+  };
+
+  const renderProductos = (filtro) => {
+    ocultarTodo();
+    const contenedor = document.getElementById('items');
+    contenedor.style.display = 'flex';
+    contenedor.innerHTML = '';
+    document.getElementById('somos').style.display = filtro === 'somos' ? 'block' : 'none';
+    if (filtro === 'somos') return;
+    const filtrados = filtro === 'todos' ? productos : productos.filter(p => p.categoria === filtro);
+    filtrados.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card col-sm-4';
+      card.innerHTML = `
+        <div class="card-body text-center">
+          <img src="${p.imagen}" class="img-fluid mb-2" alt="${p.nombre}">
+          <h5 class="card-title">${p.nombre}</h5>
+          <p class="card-text">$${p.precio}</p>
+          <button class="btn btn-primary" onclick="agregarAlCarrito(${p.id})">Agregar</button>
+        </div>`;
+      contenedor.appendChild(card);
+    });
+  };
+
+  const agregarAlCarrito = (id) => {
+    carrito.push(id);
+    actualizarCarrito();
+  };
+
+  const actualizarCarrito = () => {
+    const lista = document.getElementById('listaCarrito');
+    lista.innerHTML = '';
+    const sinDuplicados = [...new Set(carrito)];
+    let total = 0;
+    sinDuplicados.forEach(id => {
+      const item = productos.find(p => p.id === id);
+      const cantidad = carrito.filter(p => p === id).length;
+      total += item.precio * cantidad;
+      const li = document.createElement('li');
+      li.className = 'list-group-item d-flex justify-content-between align-items-center';
+      li.innerHTML = `${cantidad} x ${item.nombre} - $${item.precio}
+        <button class="btn btn-sm btn-danger" onclick="eliminarDelCarrito(${id})">X</button>`;
+      lista.appendChild(li);
+    });
+    document.getElementById('total').innerText = total.toFixed(2);
+    document.getElementById('carritoCantidad').innerText = carrito.length;
+  };
+
+  const eliminarDelCarrito = (id) => {
+    carrito = carrito.filter(p => p !== id);
+    actualizarCarrito();
+  };
+
+  const mostrarCarrito = () => {
+    ocultarTodo();
+    document.getElementById('carrito').style.display = 'block';
+  };
+
+  const mostrarLogin = () => {
+    ocultarTodo();
+    document.getElementById('loginForm').style.display = 'block';
+  };
+
+  const realizarCompra = () => {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+    const msg = document.getElementById('loginMsg');
+
+    if (usuarios[user] && usuarios[user] === pass) {
+      const resumenHTML = generarResumenHTML();
+      const total = calcularTotal().toFixed(2);
+
+      const nuevaVentana = window.open('', '_blank', 'width=600,height=600');
+      nuevaVentana.document.write(`
+        <html>
+          <head>
+            <title>Resumen de Compra</title>
+            <style>
+              body { font-family: Arial; padding: 20px; }
+              h2 { color: #88b42a; }
+              ul { list-style: none; padding: 0; }
+              li { padding: 5px 0; }
+              button { margin-top: 20px; padding: 10px 15px; background: #88b42a; border: none; color: white; cursor: pointer; }
+            </style>
+          </head>
+          <body>
+            <h2>Gracias por tu compra, ${user}</h2>
+            <p>Resumen del pedido:</p>
+            ${resumenHTML}
+            <p><strong>Total:</strong> $${total}</p>
+            <button onclick="window.print()">Imprimir</button>
+          </body>
+        </html>
+      `);
+      nuevaVentana.document.close();
+
+      vaciarCarrito();
+      ocultarTodo();
+    } else {
+      msg.innerText = 'Usuario o contraseña incorrectos.';
+    }
+  };
+
+  const calcularTotal = () => {
+    return carrito.reduce((sum, id) => {
+      const item = productos.find(p => p.id === id);
+      return sum + item.precio;
+    }, 0);
+  };
+
+  const generarResumenHTML = () => {
+    const sinDuplicados = [...new Set(carrito)];
+    let html = '<ul>';
+    sinDuplicados.forEach(id => {
+      const item = productos.find(p => p.id === id);
+      const cantidad = carrito.filter(p => p === id).length;
+      html += `<li>${cantidad} x ${item.nombre} - $${item.precio} c/u</li>`;
+    });
+    html += '</ul>';
+    return html;
+  };
+
+  const filtrarProductos = (categoria) => {
+    renderProductos(categoria);
+  };
+
+  window.onload = () => renderProductos('todos');
+</script>
+
+</body>
+</html>
