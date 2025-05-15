@@ -1,0 +1,26 @@
+header {
+    background: #198754;
+    color: #fcfcf2;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+  }
+  
+  #carritoIcono {
+    position: absolute;
+    top: 40px;
+    right: 30px;
+    cursor: pointer;
+  }
+  
+  #carritoIcono span {
+    background: red;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    color: #fff;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+  }
+  
