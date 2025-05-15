@@ -1,5 +1,5 @@
 header {
-    background: #198754;
+    background: #1d9e62;
     color: #fcfcf2;
     padding: 20px;
     text-align: center;
@@ -24,3 +24,60 @@ header {
     right: -10px;
   }
   
+  header input.form-control {
+  border-radius: 30px;
+  padding: 8px 20px;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+header .btn-dark {
+  border-radius: 20px;
+}
+
+header .btn-outline-success {
+  color: #fff;
+  border-color: #fff;
+}
+
+header .btn-outline-success:hover {
+  background-color: #fff;
+  color: #1d9e62;
+}
+
+
+    header nav button {
+      border: none;
+      background: transparent;
+      font-weight: 500;
+      font-size: 1rem;
+      color: #fff;
+      position: relative;
+    }
+
+    header nav button::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: #fff;
+      transform: scaleX(0);
+      transform-origin: bottom right;
+      transition: transform 0.3s ease-out;
+    }
+
+    header nav button:hover::after {
+      transform: scaleX(1);
+      transform-origin: bottom left;
+    }
+
+#buscador:hover {
+  border: 2px solid #1d9e62;
+  box-shadow: 0 0 12px 4px rgba(29, 158, 98, 0.75);
+  background-color: #f0fff7;
+  transition: box-shadow 0.3s ease, border 0.3s ease, background-color 0.3s ease;
+}

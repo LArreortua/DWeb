@@ -86,6 +86,8 @@ function mostrarEstadisticasDeProductos() {
         productoTop = prod.nombre;
       }
     });
+
+
   
     if (productoTop && maxVeces > 0) {
       resumen.innerText = ` Producto más agregado al carrito: "${productoTop}" (${maxVeces} veces)`;
@@ -108,4 +110,9 @@ function cerrarSesion() {
   localStorage.removeItem('usuarioActivo');
   localStorage.removeItem('tipoUsuario');
   window.location.href = '../source/energizen.html';
+}
+
+function cambiarAVistaCliente() {
+  localStorage.setItem('modoVista', 'cliente'); // cambia la vista
+  window.location.href = '../source/energizen.html'; // redirige al catálogo
 }

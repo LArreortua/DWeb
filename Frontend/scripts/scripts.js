@@ -68,19 +68,50 @@ const agregarAlCarrito = (id) => {
   actualizarCarritoIcono();
 };
 
-const actualizarCarritoIcono = () => {
+function actualizarCarritoIcono() {
+  const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
   const icono = document.getElementById('carritoCantidad');
   if (icono) icono.innerText = carrito.length;
-};
+}
+
 
 const filtrarProductos = (categoria) => {
   renderProductos(categoria);
 };
 
-window.onload = () => {
-  renderProductos('todos');
-  localStorage.setItem('productos', JSON.stringify(productos));
+window.onload = function () {
+  // Mostrar botón admin si aplica
+  const tipo = localStorage.getItem('tipoUsuario');
+  if (tipo === 'admin') {
+    const adminBtn = document.getElementById('adminBtn');
+    if (adminBtn) adminBtn.classList.remove('d-none');
+  }
+
+  // Cargar catálogo
+  if (typeof renderProductos === 'function') {
+    renderProductos('todos');
+  }
+
+  // Guardar productos en localStorage si aún no están
+  if (!localStorage.getItem('productos')) {
+    localStorage.setItem('productos', JSON.stringify(productos));
+  }
+
+  // Actualizar ícono del carrito
   actualizarCarritoIcono();
+
+  // Activar buscador
+  const buscadorInput = document.getElementById('buscador');
+  if (buscadorInput) {
+    buscadorInput.addEventListener('input', e => {
+      const termino = e.target.value.trim();
+      if (termino === '') {
+        renderProductos('todos');
+      } else {
+        buscarProductos(termino);
+      }
+    });
+  }
 };
 
 function mostrarComparador() {
@@ -100,3 +131,42 @@ function mostrarComparador() {
   document.getElementById('comparador-body').innerHTML = filas;
   document.getElementById('comparadorModal').style.display = 'block';
 }
+
+function buscarProductos(termino) {
+  ocultarTodo();
+  const contenedor = document.getElementById('items');
+  contenedor.style.display = 'flex';
+  contenedor.innerHTML = '';
+
+  const resultados = productos.filter(p => 
+    p.nombre.toLowerCase().includes(termino.toLowerCase())
+  );
+
+  if (resultados.length === 0) {
+    contenedor.innerHTML = '<p class="text-center w-100">No se encontraron productos.</p>';
+    return;
+  }
+
+  resultados.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card col-sm-4';
+    card.innerHTML = `
+      <div class="card-body text-center">
+        <img src="${p.imagen}" class="img-fluid mb-2" alt="${p.nombre}">
+        <h5 class="card-title">${p.nombre}</h5>
+        <p class="card-text">
+          <strong>Precio EnergiZen:</strong> $${p.precio}<br>
+        </p>
+        <button class="btn btn-primary" onclick="agregarAlCarrito(${p.id})">Agregar</button>
+        <button class="btn btn-secondary ml-2" onclick="toggleComparacionPrecios(${p.id})">Comparar Precios</button>
+        <div id="comparacion-${p.id}" class="comparacion-precios" style="display:none; margin-top: 10px;">
+          <p><strong>Comparación de Precios:</strong></p>
+          <p><strong>Precio EnergiZen:</strong> $${p.precio}</p>
+          <p><strong>${p.referencia.tienda}:</strong> $${p.referencia.precio}</p>
+          <p><strong>Diferencia:</strong> $${(p.referencia.precio - p.precio).toFixed(2)}</p>
+        </div>
+      </div>`;
+    contenedor.appendChild(card);
+  });
+}
+
