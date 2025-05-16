@@ -125,7 +125,40 @@ function mostrarPedidos() {
   const tabla = document.getElementById('tablaPedidos');
   tabla.innerHTML = '';
 
-  pedidos.forEach(p => {
+  const filtroMetodo = document.getElementById('filtroMetodoPago')?.value || 'todos';
+  const filtroEstado = document.getElementById('filtroEstado')?.value || 'todos';
+  const filtroOrden = document.getElementById('filtroOrden')?.value || 'recientes';
+  const busqueda = document.getElementById('buscadorPedidos')?.value.trim().toLowerCase() || '';
+
+  let pedidosFiltrados = pedidos;
+
+  // Filtro por método de pago
+  if (filtroMetodo !== 'todos') {
+    pedidosFiltrados = pedidosFiltrados.filter(p => p.payment_method_id === filtroMetodo);
+  }
+
+  // Filtro por estado
+  if (filtroEstado !== 'todos') {
+    pedidosFiltrados = pedidosFiltrados.filter(p => p.status_id === filtroEstado);
+  }
+
+  // Filtro por búsqueda
+  if (busqueda !== '') {
+    pedidosFiltrados = pedidosFiltrados.filter(p =>
+      p.ticket_id.toString().includes(busqueda) ||
+      p.user_id.toLowerCase().includes(busqueda)
+    );
+  }
+
+  // Ordenar por fecha
+  pedidosFiltrados.sort((a, b) => {
+    const fechaA = new Date(a.created_data);
+    const fechaB = new Date(b.created_data);
+    return filtroOrden === 'recientes' ? fechaB - fechaA : fechaA - fechaB;
+  });
+
+  // Mostrar en tabla
+  pedidosFiltrados.forEach(p => {
     const productosHTML = p.product_list.map(prod => `${prod.cantidad}x ${prod.nombre} ($${prod.precio})`).join('<br>');
 
     const tr = document.createElement('tr');
@@ -141,5 +174,3 @@ function mostrarPedidos() {
     tabla.appendChild(tr);
   });
 }
-
-

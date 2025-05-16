@@ -83,6 +83,30 @@
 
 </div>
 
+<div class="d-flex flex-wrap gap-3 mb-3 align-items-center">
+  <input id="buscadorPedidos" class="form-control w-auto" placeholder="Buscar por Ticket o Usuario" oninput="mostrarPedidos()">
+
+  <select id="filtroMetodoPago" class="form-select w-auto" onchange="mostrarPedidos()">
+    <option value="todos">Todos los métodos</option>
+    <option value="Efectivo">Efectivo</option>
+    <option value="Tarjeta">Tarjeta</option>
+    <option value="Transferencia">Transferencia</option>
+  </select>
+
+  <select id="filtroEstado" class="form-select w-auto" onchange="mostrarPedidos()">
+    <option value="todos">Todos los estados</option>
+    <option value="Completado">Completado</option>
+    <option value="Pendiente">Pendiente</option>
+    <option value="Cancelado">Cancelado</option>
+  </select>
+
+  <select id="filtroOrden" class="form-select w-auto" onchange="mostrarPedidos()">
+    <option value="recientes">Más recientes</option>
+    <option value="antiguos">Más antiguos</option>
+  </select>
+</div>
+
+
 <hr>
 <h4 class="mt-5">Pedidos Realizados</h4>
 <div class="table-responsive">
