@@ -143,3 +143,71 @@ window.onload = () => {
     if (msgLogin) msgLogin.style.display = 'none';
   }
 };
+
+// Se agrega esta función para el ticket
+function finalizarCompra() {
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+  if (carrito.length === 0) {
+    alert("Tu carrito está vacío.");
+    return;
+  }
+
+  const confirmar = confirm("¿Deseas confirmar tu compra?");
+  if (!confirmar) return;
+
+  const subtotal = parseFloat(document.getElementById("subtotal").textContent);
+  const impuestos = parseFloat(document.getElementById("impuestos").textContent);
+  const total = parseFloat(document.getElementById("total").textContent);
+  const usuario = localStorage.getItem("usuarioActivo");
+
+  const conteo = {};
+  carrito.forEach(id => conteo[id] = (conteo[id] || 0) + 1);
+  const productos = JSON.parse(localStorage.getItem("productos")) || [];
+
+  const listaProductos = Object.keys(conteo).map(id => {
+    const prod = productos.find(p => p.id === parseInt(id));
+    return {
+      nombre: prod.nombre,
+      cantidad: conteo[id],
+      precio: prod.precio
+    };
+  });
+
+  const ticket = {
+    user_id: usuario,
+    payment_method_id: 'Efectivo',
+    status_id: 'Completado',
+    product_list: listaProductos,
+    total_price: total,
+    created_data: new Date().toLocaleDateString(),
+    ticket_id: Date.now()
+  };
+
+  // Guardar en historial general
+  const tickets = JSON.parse(localStorage.getItem("tickets")) || [];
+  tickets.push(ticket);
+  localStorage.setItem("tickets", JSON.stringify(tickets));
+
+  // Guardar también en historial de compras por usuario
+  const compras = JSON.parse(localStorage.getItem("compras")) || {};
+  if (!compras[usuario]) compras[usuario] = [];
+  compras[usuario].push(`${ticket.created_data}: $${total.toFixed(2)} - ${listaProductos.length} productos`);
+  localStorage.setItem("compras", JSON.stringify(compras));
+
+  // Guardar ticket detallado para vista de ticket
+localStorage.setItem("ultimoTicket", JSON.stringify({
+  ticket_id: ticket.ticket_id,
+  productos: listaProductos,
+  subtotal,
+  impuestos,
+  total,
+  fecha: ticket.created_data,
+  metodoPago: ticket.payment_method_id
+}));
+
+
+  localStorage.removeItem("carrito");
+  alert("¡Compra finalizada exitosamente!");
+  window.location.href = "ticket.html";
+}

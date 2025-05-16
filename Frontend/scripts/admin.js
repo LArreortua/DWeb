@@ -7,7 +7,8 @@ if (!usuarioActivo || tipoUsuario !== 'admin') {
   } else {
     document.getElementById('saludoAdmin').innerText = `Hola, ${usuarios[usuarioActivo].nombre}`;
     mostrarUsuariosFiltrados();
-    mostrarEstadisticasDeProductos(); // ✅ ahora sí se ejecuta
+    mostrarEstadisticasDeProductos();
+    mostrarPedidos(); //
   }
   
 
@@ -73,12 +74,14 @@ function mostrarEstadisticasDeProductos() {
   
     productosFiltrados.forEach(prod => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${prod.nombre}</td>
-        <td>${prod.categoria}</td>
-        <td>$${prod.precio.toFixed(2)}</td>
-        <td>${prod.veces}</td>
-      `;
+tr.innerHTML = `
+  <td>${prod.nombre}</td>
+  <td>${prod.categoria}</td>
+  <td>$${prod.precio.toFixed(2)}</td>
+  <td>${prod.inventario ?? 'N/A'}</td> <!-- NUEVA COLUMNA -->
+  <td>${prod.veces}</td>
+`;
+
       tabla.appendChild(tr);
   
       if (prod.veces > maxVeces) {
@@ -86,6 +89,8 @@ function mostrarEstadisticasDeProductos() {
         productoTop = prod.nombre;
       }
     });
+
+
   
     if (productoTop && maxVeces > 0) {
       resumen.innerText = ` Producto más agregado al carrito: "${productoTop}" (${maxVeces} veces)`;
@@ -108,4 +113,64 @@ function cerrarSesion() {
   localStorage.removeItem('usuarioActivo');
   localStorage.removeItem('tipoUsuario');
   window.location.href = '../source/energizen.html';
+}
+
+function cambiarAVistaCliente() {
+  localStorage.setItem('modoVista', 'cliente'); // cambia la vista
+  window.location.href = '../source/energizen.html'; // redirige al catálogo
+}
+
+function mostrarPedidos() {
+  const pedidos = JSON.parse(localStorage.getItem('tickets')) || [];
+  const tabla = document.getElementById('tablaPedidos');
+  tabla.innerHTML = '';
+
+  const filtroMetodo = document.getElementById('filtroMetodoPago')?.value || 'todos';
+  const filtroEstado = document.getElementById('filtroEstado')?.value || 'todos';
+  const filtroOrden = document.getElementById('filtroOrden')?.value || 'recientes';
+  const busqueda = document.getElementById('buscadorPedidos')?.value.trim().toLowerCase() || '';
+
+  let pedidosFiltrados = pedidos;
+
+  // Filtro por método de pago
+  if (filtroMetodo !== 'todos') {
+    pedidosFiltrados = pedidosFiltrados.filter(p => p.payment_method_id === filtroMetodo);
+  }
+
+  // Filtro por estado
+  if (filtroEstado !== 'todos') {
+    pedidosFiltrados = pedidosFiltrados.filter(p => p.status_id === filtroEstado);
+  }
+
+  // Filtro por búsqueda
+  if (busqueda !== '') {
+    pedidosFiltrados = pedidosFiltrados.filter(p =>
+      p.ticket_id.toString().includes(busqueda) ||
+      p.user_id.toLowerCase().includes(busqueda)
+    );
+  }
+
+  // Ordenar por fecha
+  pedidosFiltrados.sort((a, b) => {
+    const fechaA = new Date(a.created_data);
+    const fechaB = new Date(b.created_data);
+    return filtroOrden === 'recientes' ? fechaB - fechaA : fechaA - fechaB;
+  });
+
+  // Mostrar en tabla
+  pedidosFiltrados.forEach(p => {
+    const productosHTML = p.product_list.map(prod => `${prod.cantidad}x ${prod.nombre} ($${prod.precio})`).join('<br>');
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${p.ticket_id}</td>
+      <td>${p.user_id}</td>
+      <td>${p.payment_method_id}</td>
+      <td>${p.status_id}</td>
+      <td>${productosHTML}</td>
+      <td>$${p.total_price.toFixed(2)}</td>
+      <td>${p.created_data}</td>
+    `;
+    tabla.appendChild(tr);
+  });
 }
