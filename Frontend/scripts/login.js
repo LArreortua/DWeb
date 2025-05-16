@@ -20,7 +20,7 @@ function realizarLogin() {
         localStorage.removeItem('volverACarrito');
         window.location.href = '../source/carrito.html';
       } else {
-        window.location.href = '../source/energizen.html'; // Aquí cambiaste antes a registro.html
+        window.location.href = '../source/energizen.html'; 
       }
     }
 

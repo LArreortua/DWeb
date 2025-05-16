@@ -7,7 +7,8 @@ if (!usuarioActivo || tipoUsuario !== 'admin') {
   } else {
     document.getElementById('saludoAdmin').innerText = `Hola, ${usuarios[usuarioActivo].nombre}`;
     mostrarUsuariosFiltrados();
-    mostrarEstadisticasDeProductos(); // ✅ ahora sí se ejecuta
+    mostrarEstadisticasDeProductos();
+    mostrarPedidos(); //
   }
   
 
@@ -73,12 +74,14 @@ function mostrarEstadisticasDeProductos() {
   
     productosFiltrados.forEach(prod => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${prod.nombre}</td>
-        <td>${prod.categoria}</td>
-        <td>$${prod.precio.toFixed(2)}</td>
-        <td>${prod.veces}</td>
-      `;
+tr.innerHTML = `
+  <td>${prod.nombre}</td>
+  <td>${prod.categoria}</td>
+  <td>$${prod.precio.toFixed(2)}</td>
+  <td>${prod.inventario ?? 'N/A'}</td> <!-- NUEVA COLUMNA -->
+  <td>${prod.veces}</td>
+`;
+
       tabla.appendChild(tr);
   
       if (prod.veces > maxVeces) {
@@ -116,3 +119,27 @@ function cambiarAVistaCliente() {
   localStorage.setItem('modoVista', 'cliente'); // cambia la vista
   window.location.href = '../source/energizen.html'; // redirige al catálogo
 }
+
+function mostrarPedidos() {
+  const pedidos = JSON.parse(localStorage.getItem('tickets')) || [];
+  const tabla = document.getElementById('tablaPedidos');
+  tabla.innerHTML = '';
+
+  pedidos.forEach(p => {
+    const productosHTML = p.product_list.map(prod => `${prod.cantidad}x ${prod.nombre} ($${prod.precio})`).join('<br>');
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${p.ticket_id}</td>
+      <td>${p.user_id}</td>
+      <td>${p.payment_method_id}</td>
+      <td>${p.status_id}</td>
+      <td>${productosHTML}</td>
+      <td>$${p.total_price.toFixed(2)}</td>
+      <td>${p.created_data}</td>
+    `;
+    tabla.appendChild(tr);
+  });
+}
+
+
