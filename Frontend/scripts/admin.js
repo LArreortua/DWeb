@@ -120,6 +120,13 @@ function cambiarAVistaCliente() {
   window.location.href = '../source/energizen.html'; // redirige al catálogo
 }
 
+function parseFecha(fechaStr) {
+  // Asume formato DD/MM/YYYY o D/M/YYYY
+  const [dia, mes, anio] = fechaStr.split('/').map(n => parseInt(n));
+  return new Date(anio, mes - 1, dia); // los meses en JS van de 0 a 11
+}
+
+
 function mostrarPedidos() {
   const pedidos = JSON.parse(localStorage.getItem('tickets')) || [];
   const tabla = document.getElementById('tablaPedidos');
@@ -152,8 +159,9 @@ function mostrarPedidos() {
 
   // Ordenar por fecha
   pedidosFiltrados.sort((a, b) => {
-    const fechaA = new Date(a.created_data);
-    const fechaB = new Date(b.created_data);
+const fechaA = parseFecha(a.created_data);
+const fechaB = parseFecha(b.created_data);
+
     return filtroOrden === 'recientes' ? fechaB - fechaA : fechaA - fechaB;
   });
 

@@ -10,38 +10,46 @@ function actualizarCarrito() {
 
   let subtotal = 0;
 
-  [...new Set(carrito)].forEach(id => {
-    const prod = productos.find(p => p.id === id);
-    const cantidad = conteo[id];
-    const totalProd = prod.precio * cantidad;
-    subtotal += totalProd;
-
-    const item = document.createElement('div');
-    item.className = 'card mb-3';
-    item.innerHTML = `
-      <div class="row g-0 align-items-center">
-        <div class="col-md-3">
-          <img src="${prod.imagen}" class="img-fluid rounded-start" alt="${prod.nombre}">
-        </div>
-        <div class="col-md-6">
-          <div class="card-body">
-            <h5 class="card-title">${prod.nombre}</h5>
-            <p class="card-text"><small class="text-muted">${prod.categoria}</small></p>
-            <p class="card-text mb-0"><strong>$${prod.precio.toFixed(2)}</strong> c/u</p>
-          </div>
-        </div>
-        <div class="col-md-3 text-center">
-          <div class="d-flex justify-content-center align-items-center gap-2">
-            <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad(${id}, -1)">-</button>
-            <span class="fw-bold">${cantidad}</span>
-            <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad(${id}, 1)">+</button>
-          </div>
-          <button class="btn btn-sm btn-danger mt-2" onclick="eliminarDelCarrito(${id})">Eliminar</button>
-        </div>
+  if (carrito.length === 0) {
+    lista.innerHTML = `
+      <div class="text-center w-100">
+        <p class="text-muted fs-5 mt-4">🛒 No has agregado nada al carrito.</p>
       </div>
     `;
-    lista.appendChild(item);
-  });
+  } else {
+    [...new Set(carrito)].forEach(id => {
+      const prod = productos.find(p => p.id === id);
+      const cantidad = conteo[id];
+      const totalProd = prod.precio * cantidad;
+      subtotal += totalProd;
+
+      const item = document.createElement('div');
+      item.className = 'card mb-3';
+      item.innerHTML = `
+        <div class="row g-0 align-items-center">
+          <div class="col-md-3">
+            <img src="${prod.imagen}" class="img-fluid rounded-start" alt="${prod.nombre}">
+          </div>
+          <div class="col-md-6">
+            <div class="card-body">
+              <h5 class="card-title">${prod.nombre}</h5>
+              <p class="card-text"><small class="text-muted">${prod.categoria}</small></p>
+              <p class="card-text mb-0"><strong>$${prod.precio.toFixed(2)}</strong> c/u</p>
+            </div>
+          </div>
+          <div class="col-md-3 text-center">
+            <div class="d-flex justify-content-center align-items-center gap-2">
+              <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad(${id}, -1)">-</button>
+              <span class="fw-bold">${cantidad}</span>
+              <button class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad(${id}, 1)">+</button>
+            </div>
+            <button class="btn btn-sm btn-danger mt-2" onclick="eliminarDelCarrito(${id})">Eliminar</button>
+          </div>
+        </div>
+      `;
+      lista.appendChild(item);
+    });
+  }
 
   const impuestos = subtotal * 0.16;
   let total = subtotal + impuestos;
@@ -56,6 +64,7 @@ function actualizarCarrito() {
 
   localStorage.setItem('carrito', JSON.stringify(carrito));
 }
+
 
 function aplicarCupon() {
   const input = document.getElementById('inputCupon');
