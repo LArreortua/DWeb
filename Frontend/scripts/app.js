@@ -10,14 +10,13 @@ const paypalButtons = window.paypal.Buttons({
     },
    async createOrder() {
         try {
-
             const pettition = await axios.post('https://api-m.sandbox.paypal.com/v2/checkout/orders', {
             "intent": "CAPTURE",
             "purchase_units": [
                 {
                 "amount": {
                     "currency_code": "USD",
-                    "value": "10.00"
+                    "value": `${localStorage.getItem('totalForPayPal')}`
                 }
                 }
             ],

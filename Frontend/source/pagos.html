@@ -159,6 +159,7 @@
 
         subtotalElement.textContent = subtotal.toFixed(2);
         totalElement.textContent = (subtotal + subtotal * 0.16).toFixed(2);
+        localStorage.setItem('totalForPayPal', (subtotal + subtotal * 0.16).toFixed(2))
 
     }
 

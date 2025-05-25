@@ -72,13 +72,6 @@ function mostrarEstadisticasDeProductos() {
     const resumen = document.getElementById('productoMasAgregado');
     tabla.innerHTML = '';
   
-    // Añadir campo 'veces' a cada producto
-    // const productosConConteo = productos.map(p => ({
-    //   ...p,
-    //   veces: conteo[p.id] || 0
-    // }));
-  
-    // Filtrado
     let productosFiltrados = productos;
   
     if (filtro === 'proteinas' || filtro === 'suplementos' || filtro === 'ansioliticos') {
