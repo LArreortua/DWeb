@@ -65,8 +65,6 @@ def create_user(request):
     
 def get_all_users(request):
     try:
-        request = request.get_json()
-
         users_data = getAllUsers()
 
         if users_data is None:

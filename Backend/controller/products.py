@@ -4,8 +4,8 @@ from repository.products import getProductList, getProductDetails
 
 def get_all_products(request):
     try:
-        request = request.get_json()
-        token = request.get('token')
+        # request = request.get_json()
+        # token = request.get('token')
 
         # if token is None:
         #     return jsonify(error="Usuario no válido"), 400
