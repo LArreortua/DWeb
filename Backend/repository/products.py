@@ -16,7 +16,7 @@ def getProductList():
         session = Session()
 
         query_text = """
-        select pr.name, pr.price, pt.description, pr.product_id, pr.promotion_price
+        select pr.name, pr.price, pt.name categoria, pr.product_id, pr.promotion_price, pr.image_url, pr.inventory
         from energizen.products pr
         inner join energizen.product_types pt on pr.product_type_id = pt.product_type_id
         where pr.inventory>0 and pr.status_id = 1
@@ -26,11 +26,13 @@ def getProductList():
         session.close()
         product_list = [
             {
-                "name": product[2] or None,
+                "name": product[0] or None,
                 "price": product[1] or None,
-                "description": product[2] or None,
+                "category": product[2] or None,
                 "product_id": product[3] or None,
-                "promotion_price": product[4] or None
+                "promotion_price": product[4] or None,
+                "imagen": product[5] or None,
+                "inventory": product[6] or None
             }
             for product in product_list
         ]

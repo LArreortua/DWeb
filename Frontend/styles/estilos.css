@@ -134,3 +134,55 @@ footer ul li {
   text-decoration: underline;
 }
 
+.loader-overlay {
+  position: static;
+  width: 100vw;
+  height: 60vh;
+  background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+}
+
+#items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  flex: 1 1 calc(25% - 40px); /* 4 por fila con espacio */
+  max-width: 300px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card2 {
+  flex: 1 1 ; /* 4 por fila con espacio */
+  max-width: 800px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card2:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-item img {
+  height: 50vh;
+  object-fit: cover; /* Ensures the image covers the entire area without distortion */
+}
+
+.full-height {
+  min-height: 70vh;
+  justify-content: center;
+  align-content: center;
+}

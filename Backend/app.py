@@ -9,7 +9,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-from controller.user import (validate_user, create_user)
+from controller.user import (validate_user, create_user, get_all_users)
 from controller.products import get_all_products, get_product_detail
 
 
@@ -40,6 +40,11 @@ def get_all_products_():
 def get_product_detail_():
     if request.method == "POST":
         return get_product_detail(request)
+    
+@app.route("/users/get-all", methods=["POST"])
+def get_all_users_():
+    if request.method == "POST":
+        return get_all_users(request)
     
 # ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

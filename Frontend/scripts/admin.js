@@ -1,38 +1,57 @@
 const usuarioActivo = localStorage.getItem('usuarioActivo');
 const tipoUsuario = localStorage.getItem('tipoUsuario');
-let usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
+// let usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
+const user_name = localStorage.getItem('nombreUsuario');
 
 if (!usuarioActivo || tipoUsuario !== 'admin') {
     window.location.href = 'login.html';
   } else {
-    document.getElementById('saludoAdmin').innerText = `Hola, ${usuarios[usuarioActivo].nombre}`;
+    document.getElementById('saludoAdmin').innerText = `Hola, ${user_name}`;
     mostrarUsuariosFiltrados();
     mostrarEstadisticasDeProductos();
     mostrarPedidos(); //
   }
   
+function getClients() {
+  return axios.post('http://localhost:5050/users/get-all', {})
+    .then(response => {
+      if (response.status === 200) {
+        usuarios = response.data.users;
+        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+        return usuarios; // <-- retorna los productos
+      } else {
+        msg.innerText = 'Error al cargar los usuarios';
+        return []; // en caso de error
+      }
+    })
+    .catch(error => {
+      console.log('Error del servidor. Intenta más tarde.');
+      return []; // también retorna vacío aquí
+    });
+}
 
-function mostrarUsuariosFiltrados() {
+
+async function mostrarUsuariosFiltrados() {
   const filtro = document.getElementById('filtroRol').value;
   const tbody = document.getElementById('tablaUsuarios');
   tbody.innerHTML = '';
 
-  for (const usuario in usuarios) {
-    const info = usuarios[usuario];
-    const esAdmin = usuario === 'admin';
-    const rol = esAdmin ? 'admin' : 'cliente';
+  usuarios = await getClients();
 
-    if (filtro !== 'todos' && filtro !== rol) continue;
+  for (const usuario of usuarios) {
+  const rol = usuario.rol;
+
+  if (filtro !== 'todos' && filtro !== rol) continue;
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${usuario}</td>
-      <td>${info.nombre}</td>
-      <td>${info.fechaNacimiento}</td>
-      <td>${info.correo}</td>
+      <td>${usuario.id}</td>
+      <td>${usuario.name}</td>
+      <td>${usuario.dob}</td>
+      <td>${usuario.email}</td>
       <td>${rol.charAt(0).toUpperCase() + rol.slice(1)}</td>
       <td>
-        ${usuario !== 'admin' ? `<button class="btn btn-sm btn-danger" onclick="eliminarUsuario('${usuario}')">Eliminar</button>` : 'No disponible'}
+        ${rol !== 'Administrador' ? `<button class="btn btn-sm btn-danger" onclick="eliminarUsuario('${usuario.id}')">Eliminar</button>` : 'No disponible'}
       </td>
     `;
     tbody.appendChild(tr);
@@ -54,16 +73,16 @@ function mostrarEstadisticasDeProductos() {
     tabla.innerHTML = '';
   
     // Añadir campo 'veces' a cada producto
-    const productosConConteo = productos.map(p => ({
-      ...p,
-      veces: conteo[p.id] || 0
-    }));
+    // const productosConConteo = productos.map(p => ({
+    //   ...p,
+    //   veces: conteo[p.id] || 0
+    // }));
   
     // Filtrado
-    let productosFiltrados = productosConConteo;
+    let productosFiltrados = productos;
   
     if (filtro === 'proteinas' || filtro === 'suplementos' || filtro === 'ansioliticos') {
-      productosFiltrados = productosConConteo.filter(p => p.categoria === filtro);
+      productosFiltrados = productosFiltrados.filter(p => p.category === filtro);
     } else if (filtro === 'masAgregados') {
       productosFiltrados = [...productosConConteo].sort((a, b) => b.veces - a.veces);
     }
@@ -74,13 +93,12 @@ function mostrarEstadisticasDeProductos() {
   
     productosFiltrados.forEach(prod => {
       const tr = document.createElement('tr');
-tr.innerHTML = `
-  <td>${prod.nombre}</td>
-  <td>${prod.categoria}</td>
-  <td>$${prod.precio.toFixed(2)}</td>
-  <td>${prod.inventario ?? 'N/A'}</td> <!-- NUEVA COLUMNA -->
-  <td>${prod.veces}</td>
-`;
+      tr.innerHTML = `
+        <td>${prod.name}</td>
+        <td>${prod.category}</td>
+        <td>$${prod.price.toFixed(2)}</td>
+        <td>${prod.inventory ?? 'N/A'}</td> <!-- NUEVA COLUMNA -->
+      `;
 
       tabla.appendChild(tr);
   
@@ -89,14 +107,6 @@ tr.innerHTML = `
         productoTop = prod.nombre;
       }
     });
-
-
-  
-    if (productoTop && maxVeces > 0) {
-      resumen.innerText = ` Producto más agregado al carrito: "${productoTop}" (${maxVeces} veces)`;
-    } else {
-      resumen.innerText = `No hay productos agregados al carrito.`;
-    }
   }
   
 

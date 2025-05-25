@@ -18,23 +18,23 @@ function actualizarCarrito() {
     `;
   } else {
     [...new Set(carrito)].forEach(id => {
-      const prod = productos.find(p => p.id === id);
+      const prod = productos.find(p => p.product_id === id);
       const cantidad = conteo[id];
-      const totalProd = prod.precio * cantidad;
+      const totalProd = prod.price * cantidad;
       subtotal += totalProd;
 
       const item = document.createElement('div');
-      item.className = 'card mb-3';
+      item.className = 'card2 mb-3';
       item.innerHTML = `
         <div class="row g-0 align-items-center">
           <div class="col-md-3">
-            <img src="${prod.imagen}" class="img-fluid rounded-start" alt="${prod.nombre}">
+            <img src="${prod.imagen}" class="img-fluid rounded-start" alt="${prod.name}">
           </div>
           <div class="col-md-6">
             <div class="card-body">
-              <h5 class="card-title">${prod.nombre}</h5>
-              <p class="card-text"><small class="text-muted">${prod.categoria}</small></p>
-              <p class="card-text mb-0"><strong>$${prod.precio.toFixed(2)}</strong> c/u</p>
+              <h5 class="card-title">${prod.name}</h5>
+              <p class="card-text"><small class="text-muted">${prod.category}</small></p>
+              <p class="card-text mb-0"><strong>$${prod.price.toFixed(2)}</strong> c/u</p>
             </div>
           </div>
           <div class="col-md-3 text-center">
@@ -127,15 +127,16 @@ window.onload = () => {
 
   const usuario = localStorage.getItem('usuarioActivo');
   const usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
+  const user_name = localStorage.getItem('nombreUsuario')
 
   const btnLogin = document.getElementById('btnLogin');
   const btnLogout = document.getElementById('btnLogout');
   const nombreUsuario = document.getElementById('nombreUsuario');
 
-  if (usuario && usuarios[usuario]) {
+  if (usuario) {
     if (btnLogin) btnLogin.style.display = 'none';
     if (btnLogout) btnLogout.style.display = 'inline-block';
-    if (nombreUsuario) nombreUsuario.innerText = `Hola, ${usuarios[usuario].nombre} 👋`;
+    if (nombreUsuario) nombreUsuario = `Hola, ${user_name} 👋`;
   } else {
     if (btnLogin) btnLogin.style.display = 'inline-block';
     if (btnLogout) btnLogout.style.display = 'none';
@@ -175,11 +176,11 @@ function finalizarCompra() {
   const productos = JSON.parse(localStorage.getItem("productos")) || [];
 
   const listaProductos = Object.keys(conteo).map(id => {
-    const prod = productos.find(p => p.id === parseInt(id));
+    const prod = productos.find(p => p.product_id === parseInt(id));
     return {
-      nombre: prod.nombre,
+      nombre: prod.name,
       cantidad: conteo[id],
-      precio: prod.precio
+      precio: prod.price
     };
   });
 

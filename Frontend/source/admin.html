@@ -25,8 +25,8 @@
     <h4>Usuarios Registrados</h4>
     <select id="filtroRol" class="form-select w-auto" onchange="mostrarUsuariosFiltrados()">
       <option value="todos">Mostrar todos</option>
-      <option value="cliente">Solo Clientes</option>
-      <option value="admin">Solo Administradores</option>
+      <option value="Cliente">Solo Clientes</option>
+      <option value="Administrador">Solo Administradores</option>
     </select>
   </div>
 
@@ -49,6 +49,7 @@
   </div>
   <hr>
 
+  <br>
   <div class="d-flex justify-content-end align-items-center mb-3">
     <label class="me-2">Mostrar por:</label>
     <select id="filtroCategoria" class="form-select w-auto" onchange="mostrarEstadisticasDeProductos()">
@@ -56,10 +57,7 @@
         <option value="proteinas">Solo proteínas</option>
         <option value="suplementos">Solo suplementos</option>
         <option value="ansioliticos">Solo ansiolíticos</option>
-        <option value="masAgregados">Mostrar por más agregados</option>
-      </select>
-      
-      
+      </select>      
   </div>
   
 <h4 class="mt-5">Estadísticas de Productos</h4>
@@ -67,13 +65,11 @@
   <table class="table table-striped table-bordered">
     <thead class="table-dark">
       <tr>
-  <th>Nombre</th>
-  <th>Categoría</th>
-  <th>Precio</th>
-  <th>Inventario</th> <!-- NUEVO -->
-  <th>Veces agregado</th>
-</tr>
-
+      <th>Nombre</th>
+      <th>Categoría</th>
+      <th>Precio</th>
+      <th>Inventario</th> <!-- NUEVO -->
+    </tr>
     </thead>
     <tbody id="tablaProductos">
       <!-- Se insertan dinámicamente -->
@@ -83,14 +79,16 @@
 
 </div>
 
+<hr>
+<br>
+
 <div class="d-flex flex-wrap gap-3 mb-3 align-items-center">
   <input id="buscadorPedidos" class="form-control w-auto" placeholder="Buscar por Ticket o Usuario" oninput="mostrarPedidos()">
 
   <select id="filtroMetodoPago" class="form-select w-auto" onchange="mostrarPedidos()">
     <option value="todos">Todos los métodos</option>
     <option value="Efectivo">Efectivo</option>
-    <option value="Tarjeta">Tarjeta</option>
-    <option value="Transferencia">Transferencia</option>
+    <option value="paypal">PayPal / Tarjetas</option>
   </select>
 
   <select id="filtroEstado" class="form-select w-auto" onchange="mostrarPedidos()">
@@ -106,8 +104,6 @@
   </select>
 </div>
 
-
-<hr>
 <h4 class="mt-5">Pedidos Realizados</h4>
 <div class="table-responsive">
   <table class="table table-bordered table-striped">
@@ -130,7 +126,7 @@
 
 
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="../scripts/admin.js"></script>
 
 </body>

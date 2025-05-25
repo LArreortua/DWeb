@@ -2,31 +2,42 @@ function realizarLogin() {
   const user = document.getElementById('username').value.trim();
   const pass = document.getElementById('password').value.trim();
   const msg = document.getElementById('loginMsg');
-  const tipoSeleccionado = document.querySelector('input[name="tipoUsuario"]:checked').value;
 
-  const usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
-  const usuario = usuarios[user];
+  axios.post('http://localhost:5050/user/validate', {
+    username: user,
+    password: pass
+  })
+  .then(response => {
+    const data = response.data;
 
-  if (usuario && usuario.password === pass) {
-    localStorage.setItem('usuarioActivo', user);
-    localStorage.setItem('tipoUsuario', usuario.tipo || 'cliente');
-    localStorage.setItem('modoVista', tipoSeleccionado); // <--- Aquí se guarda la preferencia
+    if (response.status == 200) {
+      localStorage.setItem('nombreUsuario', data.user_data[0].name);
+      localStorage.setItem('usuarioActivo', data.user_data[0]);
+      localStorage.setItem('usuarioemail', data.user_data[0].email);
+      localStorage.setItem('usuariolastname', data.user_data[0].last_name);
+      localStorage.setItem('usuariodob', data.user_data[0].dob);
+      localStorage.setItem('isAdmin', data.user_data[0].isAdmin || 'cliente');
+      localStorage.setItem('tipoUsuario', data.user_data[0].isAdmin ? 'admin' : 'cliente');
 
-    // Ahora redirige con base en la preferencia
-    if (tipoSeleccionado === 'admin') {
-      window.location.href = '../source/admin.html';
-    } else {
-      if (localStorage.getItem('volverACarrito') === 'true') {
-        localStorage.removeItem('volverACarrito');
-        window.location.href = '../source/carrito.html';
+      if (data.user_data[0].isAdmin === true) {
+        window.location.href = '../source/admin.html';
       } else {
-        window.location.href = '../source/energizen.html'; 
+        if (localStorage.getItem('volverACarrito') === 'true') {
+          console.log("Redirigiendo al carrito...");
+          localStorage.removeItem('volverACarrito');
+          window.location.href = '../source/carrito.html';
+        } else {
+          window.location.href = '../source/energizen.html'; 
+        }
       }
+    } else {
+      msg.innerText = 'Usuario o contraseña incorrectos.';
     }
-
-  } else {
-    msg.innerText = 'Usuario o contraseña incorrectos.';
-  }
+  })
+  .catch(error => {
+    console.error('Error al iniciar sesión:', error);
+    msg.innerText = 'Error del servidor. Intenta más tarde.';
+  });
 }
 
 

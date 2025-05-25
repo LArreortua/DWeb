@@ -1,5 +1,5 @@
 from flask import (jsonify)
-from repository.user import (validateUser, createUser)
+from repository.user import (validateUser, createUser, getAllUsers)
 import hashlib
 
 
@@ -25,7 +25,9 @@ def validate_user(request):
             'user_data': [{
                 'name': user_data.name,
                 'isAdmin': user_data.is_admin,
-                'last_name': user_data.last_name
+                'last_name': user_data.last_name,
+                'email': username,
+                'dob': user_data.date_of_born
             }],
         })
     except Exception as e:
@@ -59,4 +61,20 @@ def create_user(request):
         })
     except Exception as e:
         print(f"Error en create_user: {e}")
+        return jsonify(error=str(e)), 400
+    
+def get_all_users(request):
+    try:
+        request = request.get_json()
+
+        users_data = getAllUsers()
+
+        if users_data is None:
+            return jsonify(error="No hay usuarios registrados"), 400
+    
+        return jsonify({
+            'users': users_data
+        })
+    except Exception as e:
+        print(f"Error en validate_user: {e}")
         return jsonify(error=str(e)), 400

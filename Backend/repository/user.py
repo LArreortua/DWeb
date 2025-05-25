@@ -58,3 +58,36 @@ def createUser(email, password, name, last_name, date_of_born, is_admin):
         return None
     finally:
         session.close()
+
+
+def getAllUsers():
+    try:
+        database_url = os.environ.get('DATABASE_URL')
+
+        engine = create_engine(database_url)
+        Session = sessionmaker(bind=engine)
+        session = Session()
+
+        users = session.query(User).all()
+        session.close()
+
+        if users is None:
+            return users
+    
+        users_list = []
+        for u in users:
+            users_list.append({
+                "id": u.user_id,
+                "name": u.name,
+                "email": u.email,
+                "dob": u.date_of_born,
+                "rol": "Administrador" if u.is_admin else "Cliente"
+                # Agrega más campos si es necesario
+            })
+        return users_list
+    except Exception as e:
+        session.rollback()
+        print(f'Error en validateUser: {e}')
+        return None
+    finally:
+        session.close()

@@ -1,16 +1,19 @@
 const usuarioActivo = localStorage.getItem('usuarioActivo');
+const usuarioemail = localStorage.getItem('usuarioemail');
+const nombreUsuario = localStorage.getItem('nombreUsuario')
+const usuariolastname = localStorage.getItem('usuariolastname');
+const usuariodob = localStorage.getItem('usuariodob');
 const usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
 const tickets = JSON.parse(localStorage.getItem('tickets')) || [];
 
-if (!usuarioActivo || !usuarios[usuarioActivo]) {
+if (!usuarioActivo) {
   document.getElementById('sinSesion').style.display = 'block';
 } else {
-  const datos = usuarios[usuarioActivo];
+  const datos = usuarioActivo;
   document.getElementById('contenidoCuenta').style.display = 'block';
-  document.getElementById('infoUsuario').textContent = usuarioActivo;
-  document.getElementById('infoNombre').textContent = datos.nombre;
-  document.getElementById('infoCorreo').textContent = datos.correo;
-  document.getElementById('infoNacimiento').textContent = datos.fechaNacimiento;
+  document.getElementById('infoNombre').textContent = nombreUsuario + ' ' + usuariolastname;
+  document.getElementById('infoCorreo').textContent = usuarioemail;
+  document.getElementById('infoNacimiento').textContent = usuariodob;
 
   const lista = document.getElementById('listaCompras');
   const historial = tickets.filter(t => t.user_id === usuarioActivo);
