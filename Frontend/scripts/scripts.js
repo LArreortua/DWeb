@@ -1,20 +1,24 @@
-const productos = [
-  { id: 1, nombre: 'Proteína Zen', precio: 380.00, categoria: 'proteinas', imagen: "../recursos/ProteinaZen.png", referencia: { tienda: "Amazon", precio: 400.00 } },
-  { id: 2, nombre: 'Vitaminas B-Plus', precio: 100.00, categoria: 'suplementos', imagen: "../recursos/VitaminaB.png", referencia: { tienda: "Farmacias Similares", precio: 120.00 } },
-  { id: 3, nombre: 'Omega 3 Pure', precio: 90.00, categoria: 'suplementos', imagen: "../recursos/Omega3.png", referencia: { tienda: "MercadoLibre", precio: 95.00 } },
-  { id: 4, nombre: 'CalmaZen', precio: 150.00, categoria: 'ansioliticos', imagen: "../recursos/CalmaZen.png", referencia: { tienda: "Farmacias Similares", precio: 170.00 } },
-  { id: 5, nombre: 'Proteína Herbal', precio: 456.00, categoria: 'proteinas', imagen: "../recursos/ProteinaHerbal.png", referencia: { tienda: "Amazon", precio: 470.00 } },
-  { id: 6, nombre: 'Tranquilizante Natural', precio: 78.00, categoria: 'ansioliticos', imagen: "../recursos/Tranquilizante.png", referencia: { tienda: "Farmacias Similares", precio: 90.00 } },
-  { id: 7, nombre: 'Proteina vegana de chicharo', precio: 305.00, categoria: 'proteinas', imagen: "../recursos/prochicharo.png", referencia: { tienda: "MercadoLibre", precio: 320.00 } },
-  { id: 8, nombre: 'Omegas veganos', precio: 366.00, categoria: 'suplementos', imagen: "../recursos/omegas.png", referencia: { tienda: "Amazon", precio: 390.00 } },
-  { id: 9, nombre: 'Proteína Birdman Fitmingo', precio: 508.00, categoria: 'proteinas', imagen: "../recursos/birdman.png", referencia: { tienda: "Amazon", precio: 520.00 } },
-  { id: 10, nombre: 'Fenogreco ', precio: 259.00, categoria: 'suplementos', imagen: "../recursos/feno.png", referencia: { tienda: "Farmacias Similares", precio: 265.00 } },
-  { id: 11, nombre: 'CHILL', precio: 549.00, categoria: 'ansioliticos', imagen: "../recursos/chill.png", referencia: { tienda: "Amazon", precio: 560.00 } },
-  { id: 12, nombre: 'Proteina de Soya', precio: 299.00, categoria: 'proteinas', imagen: "../recursos/prosoy.png", referencia: { tienda: "MercadoLibre", precio: 310.00 } },
-  { id: 13, nombre: 'Agariana', precio: 275.00, categoria: 'ansioliticos', imagen: "../recursos/agariana.png", referencia: { tienda: "Farmacias Similares", precio: 285.00 } },
-  { id: 14, nombre: 'OBY NAD +', precio: 419.00, categoria: 'suplementos', imagen: "../recursos/oby.png", referencia: { tienda: "Amazon", precio: 430.00 } },
-  { id: 15, nombre: 'CALM DOWN Platinum', precio: 599.00, categoria: 'ansioliticos', imagen: "../recursos/calm.png", referencia: { tienda: "MercadoLibre", precio: 620.00 } }
-];
+
+var productos = []
+
+function cargarProductos() {
+  return axios.post('http://localhost:5050/products/get-list', {})
+    .then(response => {
+      if (response.status === 200) {
+        productos = response.data.product_list;
+        localStorage.setItem('productos', JSON.stringify(productos));
+        return productos; // <-- retorna los productos
+      } else {
+        msg.innerText = 'Error al cargar los productos';
+        return []; // en caso de error
+      }
+    })
+    .catch(error => {
+      console.log('Error del servidor. Intenta más tarde.');
+      return []; // también retorna vacío aquí
+    });
+}
+
 
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
@@ -25,37 +29,52 @@ const ocultarTodo = () => {
   document.getElementById('registerForm').style.display = 'none';
 };
 
-const renderProductos = (filtro) => {
+const renderProductos = async (filtro) => {
   ocultarTodo();
   const contenedor = document.getElementById('items');
+  const loader = document.getElementById('loader');
+  loader.style.display = 'flex';
+
   contenedor.style.display = 'flex';
   contenedor.innerHTML = '';
-  document.getElementById('somos').style.display = filtro === 'somos' ? 'block' : 'none';
-  if (filtro === 'somos') return;
 
-  const filtrados = filtro === 'todos' ? productos : productos.filter(p => p.categoria === filtro);
+  loader.style.display = 'block'; // ← muestra el loader
+
+  document.getElementById('somos').style.display = filtro === 'somos' ? 'block' : 'none';
+  if (filtro === 'somos') {
+    loader.style.display = 'none'; // ← oculta si es sección "somos"
+    return;
+  }
+
+  productos = await cargarProductos();
+  const load_simulation = new Promise(resolve => setTimeout(resolve, 500));
+  await Promise.all([productos, load_simulation]);
+  loader.style.display = 'none'; // ← oculta el loader después de cargar
+
+  const filtrados = filtro === 'todos' ? productos : productos.filter(p => p.category === filtro);
   filtrados.forEach(p => {
     const card = document.createElement('div');
-    card.className = 'card col-sm-4';
+    card.className = 'card col-sm-4 m-2 shadow'; // ← separación y sombra
+    card.style.minWidth = '300px'; // opcional
     card.innerHTML = `
       <div class="card-body text-center">
-        <img src="${p.imagen}" class="img-fluid mb-2" alt="${p.nombre}">
-        <h5 class="card-title">${p.nombre}</h5>
+        <img src="${p.imagen}" class="img-fluid mb-2" alt="${p.name}" onclick="mostrarDescripcion(${p.product_id})">
+        <h5 class="card-title">${p.name}</h5>
         <p class="card-text">
-          <strong>Precio EnergiZen:</strong> $${p.precio}<br>
+          <strong>Precio EnergiZen:</strong> $${p.price}<br>
         </p>
-        <button class="btn btn-primary" onclick="agregarAlCarrito(${p.id})">Agregar</button>
-        <button class="btn btn-secondary ml-2" onclick="toggleComparacionPrecios(${p.id})">Comparar Precios</button>
-        <div id="comparacion-${p.id}" class="comparacion-precios" style="display:none; margin-top: 10px;">
+        <p><strong>Inventario:</strong> ${p.inventory || 0}</p>
+        <button class="btn btn-primary" onclick="agregarAlCarrito(${p.product_id})">Agregar</button>
+        <button class="btn btn-secondary ml-2" onclick="toggleComparacionPrecios(${p.product_id})">Comparar Precios</button>
+        <div id="comparacion-${p.product_id}" class="comparacion-precios" style="display:none; margin-top: 10px;">
           <p><strong>Comparación de Precios:</strong></p>
-          <p><strong>Precio EnergiZen:</strong> $${p.precio}</p>
-          <p><strong>${p.referencia.tienda}:</strong> $${p.referencia.precio}</p>
-          <p><strong>Diferencia:</strong> $${(p.referencia.precio - p.precio).toFixed(2)}</p>
+          <p><strong>Precio EnergiZen:</strong> $${p.price}</p>
         </div>
       </div>`;
     contenedor.appendChild(card);
   });
 };
+
 
 const toggleComparacionPrecios = (id) => {
   const comparacion = document.getElementById(`comparacion-${id}`);
@@ -68,19 +87,50 @@ const agregarAlCarrito = (id) => {
   actualizarCarritoIcono();
 };
 
-const actualizarCarritoIcono = () => {
+function actualizarCarritoIcono() {
+  const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
   const icono = document.getElementById('carritoCantidad');
   if (icono) icono.innerText = carrito.length;
-};
+}
+
 
 const filtrarProductos = (categoria) => {
   renderProductos(categoria);
 };
 
-window.onload = () => {
-  renderProductos('todos');
-  localStorage.setItem('productos', JSON.stringify(productos));
+window.onload = function () {
+  // Mostrar botón admin si aplica
+  const tipo = localStorage.getItem('tipoUsuario');
+  if (tipo === 'admin') {
+    const adminBtn = document.getElementById('adminBtn');
+    if (adminBtn) adminBtn.classList.remove('d-none');
+  }
+
+  // Cargar catálogo
+  if (typeof renderProductos === 'function') {
+    renderProductos('todos');
+  }
+
+  // Guardar productos en localStorage si aún no están
+  if (!localStorage.getItem('productos')) {
+    localStorage.setItem('productos', JSON.stringify(productos));
+  }
+
+  // Actualizar ícono del carrito
   actualizarCarritoIcono();
+
+  // Activar buscador
+  const buscadorInput = document.getElementById('buscador');
+  if (buscadorInput) {
+    buscadorInput.addEventListener('input', e => {
+      const termino = e.target.value.trim();
+      if (termino === '') {
+        renderProductos('todos');
+      } else {
+        buscarProductos(termino);
+      }
+    });
+  }
 };
 
 function mostrarComparador() {
@@ -99,4 +149,55 @@ function mostrarComparador() {
   }).join('');
   document.getElementById('comparador-body').innerHTML = filas;
   document.getElementById('comparadorModal').style.display = 'block';
+}
+
+function buscarProductos(termino) {
+  ocultarTodo();
+  const contenedor = document.getElementById('items');
+  contenedor.style.display = 'flex';
+  contenedor.innerHTML = '';
+  const productos = JSON.parse(localStorage.getItem('productos'));
+
+  const resultados = productos.filter(p => {
+    return p.name.toLowerCase().includes(termino.toLowerCase());
+  });
+
+  if (resultados.length === 0) {
+    contenedor.innerHTML = '<p class="text-center w-100">No se encontraron productos.</p>';
+    return;
+  }
+
+  resultados.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card col-sm-4';
+    card.innerHTML = `
+      <div class="card-body text-center">
+        <img src="${p.imagen}" class="img-fluid mb-2" alt="${p.name}" onclick="mostrarDescripcion(${p.product_id})">
+        <h5 class="card-title">${p.name}</h5>
+        <p class="card-text">
+          <strong>Precio EnergiZen:</strong> $${p.price}<br>
+        </p>
+        <p><strong>Inventario:</strong> ${p.inventory || 0}</p>
+        <button class="btn btn-primary" onclick="agregarAlCarrito(${p.product_id})">Agregar</button>
+        <button class="btn btn-secondary ml-2" onclick="toggleComparacionPrecios(${p.product_id})">Comparar Precios</button>
+        <div id="comparacion-${p.product_id}" class="comparacion-precios" style="display:none; margin-top: 10px;">
+          <p><strong>Comparación de Precios:</strong></p>
+          <p><strong>Precio EnergiZen:</strong> $${p.price}</p>
+        </div>
+      </div>`;
+    contenedor.appendChild(card);
+  });
+}
+
+function mostrarDescripcion(id) {
+  const producto = productos.find(p => p.id === id);
+  const modalBody = document.getElementById('descripcionContenido');
+  const modalTitle = document.getElementById('descripcionModalLabel');
+
+  modalTitle.textContent = producto.nombre;
+  modalBody.textContent = producto.descripcion;
+
+
+  const modal = new bootstrap.Modal(document.getElementById('descripcionModal'));
+  modal.show();
 }

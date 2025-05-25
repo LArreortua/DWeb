@@ -1,5 +1,5 @@
 header {
-    background: #198754;
+    background: #1d9e62;
     color: #fcfcf2;
     padding: 20px;
     text-align: center;
@@ -24,3 +24,165 @@ header {
     right: -10px;
   }
   
+  header input.form-control {
+  border-radius: 30px;
+  padding: 8px 20px;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+header .btn-dark {
+  border-radius: 20px;
+}
+
+header .btn-outline-success {
+  color: #fff;
+  border-color: #fff;
+}
+
+header .btn-outline-success:hover {
+  background-color: #fff;
+  color: #1d9e62;
+}
+
+
+    header nav button {
+      border: none;
+      background: transparent;
+      font-weight: 500;
+      font-size: 1rem;
+      color: #fff;
+      position: relative;
+    }
+
+    header nav button::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: #fff;
+      transform: scaleX(0);
+      transform-origin: bottom right;
+      transition: transform 0.3s ease-out;
+    }
+
+    header nav button:hover::after {
+      transform: scaleX(1);
+      transform-origin: bottom left;
+    }
+
+#buscador:hover {
+  border: 2px solid #1d9e62;
+  box-shadow: 0 0 12px 4px rgba(29, 158, 98, 0.75);
+  background-color: #f0fff7;
+  transition: box-shadow 0.3s ease, border 0.3s ease, background-color 0.3s ease;
+}
+
+footer h5 {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+footer ul {
+  padding-left: 0;
+}
+
+footer ul li {
+  margin-bottom: 8px;
+}
+
+.seccion-legal {
+  background-color: #f9f9f9;
+  border-left: 5px solid #1d9e62;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+.seccion-legal h4 i {
+  margin-right: 10px;
+}
+.logo-centro {
+  display: block;
+  margin: 20px auto 0;
+  max-height: 120px;
+}
+
+/* Aumenta espacio visual del footer */
+.custom-footer {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Hover links */
+.footer-link {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.2s;
+}
+
+.footer-link:hover {
+  color: #bdf3cf;
+  transform: translateX(5px);
+  text-decoration: underline;
+}
+
+.loader-overlay {
+  position: static;
+  width: 100vw;
+  height: 60vh;
+  background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+}
+
+#items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  flex: 1 1 calc(25% - 40px); /* 4 por fila con espacio */
+  max-width: 300px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card2 {
+  flex: 1 1 ; /* 4 por fila con espacio */
+  max-width: 800px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card2:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-item img {
+  height: 50vh;
+  object-fit: cover; /* Ensures the image covers the entire area without distortion */
+}
+
+.full-height {
+  min-height: 70vh;
+  justify-content: center;
+  align-content: center;
+}
