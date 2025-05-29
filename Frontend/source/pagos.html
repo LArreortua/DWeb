@@ -157,9 +157,11 @@
             subtotal += item.precio * item.cantidad;
         });
 
-        subtotalElement.textContent = subtotal.toFixed(2);
-        totalElement.textContent = (subtotal + subtotal * 0.16).toFixed(2);
-        localStorage.setItem('totalForPayPal', (subtotal + subtotal * 0.16).toFixed(2))
+        descuentoAplicado = localStorage.getItem('descuento')
+        subtotal_last = subtotal.toFixed(2) - (subtotal*descuentoAplicado)
+        subtotalElement.textContent = subtotal_last.toFixed(2);
+        totalElement.textContent = (subtotal_last + subtotal_last * 0.16).toFixed(2);
+        localStorage.setItem('totalForPayPal', (subtotal_last + subtotal_last * 0.16).toFixed(2))
 
     }
 

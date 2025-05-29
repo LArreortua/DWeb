@@ -26,7 +26,7 @@ const paypalButtons = window.paypal.Buttons({
             }
             },{
                 headers:{
-                    Authorization: 'Bearer A21AAJmCl39iPI3UOGCtmtWu3b67ncmQqvk1P9D1zWwVm4RS0bMSQQPMa9GzV2cURlXAtayLw5coPQ8XEM7AWwcN7A0kK19NA'
+                    Authorization: 'Bearer A21AAIeQlgoqeV77AwGUnwmGBlC5A_KUoWErx-_rh7FCLaPOHUkGKYutC7zow0ZAb8gxJipryLWbe694iieXfKeQeasuL0Liw'
                 }
             }
             )

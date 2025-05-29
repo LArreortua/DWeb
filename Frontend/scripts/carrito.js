@@ -55,6 +55,7 @@ function actualizarCarrito() {
   let total = subtotal + impuestos;
 
   if (descuentoAplicado > 0) {
+    subtotal -= subtotal * descuentoAplicado;
     total -= total * descuentoAplicado;
   }
 
@@ -75,6 +76,7 @@ function aplicarCupon() {
     descuentoAplicado = 0.10;
     msg.innerText = '✅ Cupón aplicado: 10% de descuento';
     msg.style.color = 'green';
+    localStorage.setItem('descuento', String(descuentoAplicado))
   } else {
     descuentoAplicado = 0;
     msg.innerText = '❌ Cupón inválido';
