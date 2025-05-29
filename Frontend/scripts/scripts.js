@@ -69,6 +69,7 @@ const renderProductos = async (filtro) => {
         <div id="comparacion-${p.product_id}" class="comparacion-precios" style="display:none; margin-top: 10px;">
           <p><strong>Comparación de Precios:</strong></p>
           <p><strong>Precio EnergiZen:</strong> $${p.price}</p>
+          <p><strong>Precio Competencia:</strong> $${((p.price*1.16).toFixed(2))}</p>
         </div>
       </div>`;
     contenedor.appendChild(card);
