@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar sesión - EnergiZen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  >
+  <link rel="stylesheet" href="../styles/estilos.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+</head>
+<body>
+
+<header>
+  <h1>Iniciar Sesión</h1>
+</header>
+
+<div class="container mt-4 ">
+  <div class="row justify-content-center">
+    <div class="col-md-6 full-height">
+      <div id="loginForm">
+          <h3 class="mb-4">Accede a tu cuenta</h3>
+            
+          <input type="text" id="username" placeholder="Usuario" class="form-control mb-3">
+          <input type="password" id="password" placeholder="Contraseña" class="form-control mb-3">
+          <button class="btn btn-primary w-100 mb-3" onclick="realizarLogin()">Iniciar Sesión</button>
+          <p id="loginMsg" class="text-danger mb-3"></p>
+          <p class="text-center mb-3">¿No tienes cuenta? <a href="../source/registro.html">Regístrate aquí</a></p>
+          <a href="../source/energizen.html" class="btn btn-secondary w-100">Volver al Catálogo</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../scripts/login.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<footer class="bg-success text-white mt-5 pt-5 pb-4 custom-footer">
+  <div class="container">
+    <div class="row">
+      <!-- Sobre EnergiZen -->
+      <div class="col-md-3 mb-4">
+        <h5>Sobre EnergiZen</h5>
+        <p class="small">
+          Promovemos un estilo de vida saludable con productos orgánicos que apoyan tu bienestar físico y mental. Cada compra impulsa el comercio justo y la sustentabilidad.
+        </p>
+      </div>
+
+      <!-- Más información -->
+      <div class="col-md-3 mb-4">
+        <h5>Más información</h5>
+        <ul class="list-unstyled small">
+          <li><a href="preguntasFrecuentes.html" class="footer-link">Preguntas frecuentes</a></li>
+          <li><a href="terminos.html" class="footer-link">Términos y condiciones</a></li>
+          <li><a href="privacidad.html" class="footer-link">Política de privacidad</a></li>
+        </ul>
+      </div>
+
+      <!-- Contacto -->
+      <div class="col-md-3 mb-4">
+        <h5>Contáctanos</h5>
+        <p class="small m-0">¿Tienes alguna duda?</p>
+        <p class="small m-0">📧 contacto@energizen.mx</p>
+        <p class="small m-0">📍 CDMX, México</p>
+        <p class="small m-0">📞 +52 55 1234 5678</p>
+      </div>
+
+      <!-- Redes Sociales -->
+      <div class="col-md-3 mb-4">
+        <h5>Síguenos</h5>
+        <div class="d-flex gap-3 fs-5">
+          <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-white"><i class="bi bi-tiktok"></i></a>
+          <a href="#" class="text-white"><i class="bi bi-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+    <hr class="border-light">
+    <p class="text-center small m-0">© 2025 EnergiZen. Todos los derechos reservados.</p>
+  </div>
+</footer>
+</body>
+</html>

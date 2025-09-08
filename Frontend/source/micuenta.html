@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Cuenta - EnergiZen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  >
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/estilos.css">
+
+  <style>
+    .card-title {
+      color: #1d9e62;
+    }
+    .section-title {
+      border-left: 5px solid #1d9e62;
+      padding-left: 10px;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="bg-success text-white p-3 d-flex justify-content-between align-items-center">
+  <h2 class="m-0">Mi Cuenta</h2>
+  <button class="btn btn-outline-light" onclick="regresarPrincipal()">Regresar al catálogo</button>
+</header>
+
+<div class="container mt-4">
+
+  <!-- Mensaje si no hay sesión -->
+  <div id="sinSesion" class="text-center full-height" style="display: none;">
+    <p class="fs-5">Debes iniciar sesión para ver tu cuenta.</p>
+    <a href="login.html" class="btn btn-primary">Iniciar sesión</a>
+  </div>
+
+  <!-- Contenido de la cuenta -->
+  <div id="contenidoCuenta" class="full-height" style="display: none;">
+    <div class="row">
+      <!-- Información del usuario -->
+      <div class="col-md-6 mb-4">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5 class="card-title">Información del Usuario</h5>
+            <ul class="list-group">
+              <li class="list-group-item"><strong>Usuario:</strong> <span id="infoUsuario"></span></li>
+              <li class="list-group-item"><strong>Nombre:</strong> <span id="infoNombre"></span></li>
+              <li class="list-group-item"><strong>Correo:</strong> <span id="infoCorreo"></span></li>
+              <li class="list-group-item"><strong>Fecha de nacimiento:</strong> <span id="infoNacimiento"></span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historial de Compras -->
+      <div class="col-md-6 mb-4">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5 class="card-title">Historial de Compras</h5>
+            <ul id="listaCompras" class="accordion list-group"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../scripts/micuenta.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<footer class="bg-success text-white mt-5 pt-5 pb-4 custom-footer">
+  <div class="container">
+    <div class="row">
+      <!-- Sobre EnergiZen -->
+      <div class="col-md-3 mb-4">
+        <h5>Sobre EnergiZen</h5>
+        <p class="small">
+          Promovemos un estilo de vida saludable con productos orgánicos que apoyan tu bienestar físico y mental. Cada compra impulsa el comercio justo y la sustentabilidad.
+        </p>
+      </div>
+
+      <!-- Más información -->
+      <div class="col-md-3 mb-4">
+        <h5>Más información</h5>
+        <ul class="list-unstyled small">
+          <li><a href="preguntasFrecuentes.html" class="footer-link">Preguntas frecuentes</a></li>
+          <li><a href="terminos.html" class="footer-link">Términos y condiciones</a></li>
+          <li><a href="privacidad.html" class="footer-link">Política de privacidad</a></li>
+        </ul>
+      </div>
+
+      <!-- Contacto -->
+      <div class="col-md-3 mb-4">
+        <h5>Contáctanos</h5>
+        <p class="small m-0">¿Tienes alguna duda?</p>
+        <p class="small m-0">📧 contacto@energizen.mx</p>
+        <p class="small m-0">📍 CDMX, México</p>
+        <p class="small m-0">📞 +52 55 1234 5678</p>
+      </div>
+
+      <!-- Redes Sociales -->
+      <div class="col-md-3 mb-4">
+        <h5>Síguenos</h5>
+        <div class="d-flex gap-3 fs-5">
+          <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-white"><i class="bi bi-tiktok"></i></a>
+          <a href="#" class="text-white"><i class="bi bi-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+    <hr class="border-light">
+    <p class="text-center small m-0">© 2025 EnergiZen. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+</body>
+</html>
